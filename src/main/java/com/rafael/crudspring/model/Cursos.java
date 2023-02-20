@@ -1,5 +1,7 @@
 package com.rafael.crudspring.model;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -18,6 +20,8 @@ import lombok.Data;
 
 @Data //getters setters constructor
 @Entity //vai ser uma tabela no banco de dados
+@SQLDelete(sql = "UPDATE Cursos SET status = 'inactive' WHERE id = ?") //o metodo delete não muda mas a logica do q vai acontecer no sql sim
+@Where(clause = "status = 'active'")
 //@Table("cursos") = > codigo legado ou se ja tiver uma tabela mas ainda não classe
 public class Cursos {
 
@@ -35,7 +39,13 @@ public class Cursos {
     @NotNull
     @Length(max=10)
     @Pattern(regexp = "Back-end|Front-end")
-    @Column(length = 20, nullable = false) // setar o length é bom pra evitar que o banco fique grande demais
+    @Column(length = 10, nullable = false) // setar o length é bom pra evitar que o banco fique grande demais
     private String category;
+
+    @NotNull
+    @Length(max=10)
+    @Pattern(regexp = "active|inactive")
+    @Column(length = 10, nullable = false) 
+    private String status = "active";
 
 }
