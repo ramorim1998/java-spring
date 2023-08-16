@@ -24,8 +24,9 @@ public class CursosService {
     private CursosRepository cursosRepository;
     private CursoMapper cursoMapper;
 
-    public CursosService(CursosRepository cursosRepository) {
+    public CursosService(CursosRepository cursosRepository, CursoMapper cursoMapper) {
         this.cursosRepository = cursosRepository;
+        this.cursoMapper = cursoMapper;
     }
 
     public List<CursoDTO> list() {
