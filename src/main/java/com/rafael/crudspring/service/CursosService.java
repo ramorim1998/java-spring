@@ -1,8 +1,6 @@
 package com.rafael.crudspring.service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -11,7 +9,6 @@ import org.springframework.validation.annotation.Validated;
 import com.rafael.crudspring.dto.CursoDTO;
 import com.rafael.crudspring.exception.RecordNotFoundException;
 import com.rafael.crudspring.mapper.CursoMapper;
-import com.rafael.crudspring.model.Cursos;
 import com.rafael.crudspring.repository.CursosRepository;
 
 import jakarta.validation.Valid;
@@ -49,7 +46,7 @@ public class CursosService {
         return cursosRepository.findById(id)
         .map(record -> {
             record.setName(curso.name());
-            record.setCategory(curso.category());
+            record.setCategory(cursoMapper.convertCategoria(curso.category()));
            return cursosRepository.save(record);
         }).map(cursoMapper::toDTO).orElseThrow(() -> new RecordNotFoundException(id));
     }

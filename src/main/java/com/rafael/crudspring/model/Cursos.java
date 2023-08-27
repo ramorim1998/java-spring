@@ -1,22 +1,29 @@
 package com.rafael.crudspring.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.Length;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import jakarta.annotation.Generated;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import lombok.Data;
+import com.rafael.crudspring.enums.Categoria;
+import com.rafael.crudspring.enums.Status;
+import com.rafael.crudspring.enums.conversores.CategoriaConverter;
+import com.rafael.crudspring.enums.conversores.StatusConverter;
 
 @Data //getters setters constructor
 @Entity //vai ser uma tabela no banco de dados
@@ -37,15 +44,17 @@ public class Cursos {
     private String name;
 
     @NotNull
-    @Length(max=10)
-    @Pattern(regexp = "Back-end|Front-end")
-    @Column(length = 10, nullable = false) // setar o length é bom pra evitar que o banco fique grande demais
-    private String category;
+    @Convert(converter = CategoriaConverter.class)
+    @Column( length = 10, nullable = false) // setar o length é bom pra evitar que o banco fique grande demais
+    private Categoria category;
 
     @NotNull
-    @Length(max=10)
-    @Pattern(regexp = "active|inactive")
+    @Convert(converter = StatusConverter.class)
     @Column(length = 10, nullable = false) 
-    private String status = "active";
+    private Status status = Status.ATIVO;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "curso")
+    //@JoinColumn(name = "curso_id")
+    private List<Licao> licoes = new ArrayList<>();
 
 }
